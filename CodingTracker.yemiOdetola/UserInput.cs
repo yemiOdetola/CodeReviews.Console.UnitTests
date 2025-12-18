@@ -10,7 +10,7 @@ public class UserInput
   {
     Console.Clear();
     bool closeApp = false;
-    while (closeApp == false)
+    while (!closeApp)
     {
       Console.WriteLine("MAIN MENU \n");
       Console.WriteLine("What would you like to do? \n");
@@ -26,7 +26,6 @@ public class UserInput
       {
         case "0":
           Console.WriteLine("\nGoodbye!\n");
-          closeApp = true;
           Environment.Exit(0);
           break;
         case "1":
@@ -71,7 +70,6 @@ public class UserInput
 
       if (dateInput == "0")
       {
-        GetUserInput();
         return DateTime.MinValue;
       }
 
@@ -86,7 +84,6 @@ public class UserInput
         break;
       }
       dateInput = AnsiConsole.Prompt(new TextPrompt<string>("\nInvalid date. Format: dd-MM-yyyy. Try again:"));
-      Console.WriteLine(dateInput);
     }
 
     string timePrompt = existingValue.HasValue
@@ -105,7 +102,7 @@ public class UserInput
         break;
       }
 
-      if (TimeSpan.TryParseExact(timeInput, "hh\\:mm", CultureInfo.InvariantCulture, out time))
+      if (TimeSpan.TryParseExact(timeInput, "HH\\:mm", CultureInfo.InvariantCulture, out time))
       {
         break;
       }
@@ -124,7 +121,7 @@ public class UserInput
 
     string? numberInput = Console.ReadLine();
 
-    if (numberInput == "0") GetUserInput();
+    if (numberInput == "0") return -1;
 
     while (!int.TryParse(numberInput, out _) || Convert.ToInt32(numberInput) < 0)
     {

@@ -9,7 +9,16 @@ public class CodingController
   public static void Insert()
   {
     DateTime StartTime = UserInput.GetDateTimeInput(TimeType.StartTime);
+    if (StartTime == DateTime.MinValue) return; // User chose to return to main menu
+
     DateTime EndTime = UserInput.GetDateTimeInput(TimeType.EndTime);
+    if (EndTime == DateTime.MinValue) return;
+
+    if (EndTime < StartTime)
+    {
+      AnsiConsole.MarkupLine("[red]Error: End time cannot be earlier than the start time. Please enter valid times.[/]");
+      return;
+    }
 
     TimeSpan Duration = CalculateDuration(StartTime, EndTime);
     int DurationMinutes = (int)Duration.TotalMinutes;
@@ -23,7 +32,7 @@ public class CodingController
     }
     catch (Exception ex)
     {
-      AnsiConsole.MarkupLine($"[red]Error updating record: {ex.Message}[/]");
+      AnsiConsole.MarkupLine($"[red]Error inserting record: {ex.Message}[/]");
       return;
     }
     Console.Clear();
@@ -40,7 +49,6 @@ public class CodingController
       string connectionString = DbConnectionHelper.GetConnectionString();
       var dbQuery = new DbQuery(connectionString);
       dbQuery.DeleteRecord(recordId);
-      AnsiConsole.MarkupLine($"[red]Record with Id {recordId} was deleted.[/]");
     }
     catch (Exception ex)
     {
@@ -63,8 +71,6 @@ public class CodingController
       var dbQuery = new DbQuery(connectionString);
       CodingSession? record = dbQuery.FetchSingleRecord(recordId);
 
-      Console.WriteLine($"record starttime {record?.StartTime}");
-
       if (record == null)
       {
         AnsiConsole.MarkupLine($"[red]Record with Id {recordId} does not exist[/] \n \n");
@@ -74,7 +80,11 @@ public class CodingController
         DateTime StartConverted = DateTime.ParseExact(record.StartTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         DateTime EndConverted = DateTime.ParseExact(record.EndTime, "yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture);
         DateTime StartTime = UserInput.GetDateTimeInput(TimeType.StartTime, StartConverted);
+        if (StartTime == DateTime.MinValue) return;
+
         DateTime EndTime = UserInput.GetDateTimeInput(TimeType.EndTime, EndConverted);
+        if (EndTime == DateTime.MinValue) return;
+
         TimeSpan Duration = CalculateDuration(StartTime, EndTime);
         int DurationMinutes = (int)Duration.TotalMinutes;
 
@@ -104,7 +114,6 @@ public class CodingController
     catch (Exception ex)
     {
       AnsiConsole.WriteLine(ex.Message);
-      AnsiConsole.MarkupLine($"[red]No records found!.[/]");
     }
   }
 

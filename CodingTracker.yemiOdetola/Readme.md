@@ -7,7 +7,7 @@ The application uses the Spectre.Console library for a user-friendly console int
 
 ## Features
 
-- Log coding sessions using a specific date format (yyyy-MM-dd) and time format (HH:mm).
+- Log coding sessions using a specific date format (dd-MM-yyyy) and time format (HH:mm).
 - Automatically calculate the duration based on start and end times.
 - Show logged records.
 - Add, remove, or update records.
